@@ -85,6 +85,23 @@ In the demo data we have four social features:
 
 The results for the demo data are written to the output file SVResultsOnDemoData.csv, which can be viewed in Microsoft excel.
 
+To print the statistics of the different columns (social value, asocial value, etc.), type,
+```
+>results$stat
+```
+
+To get the percentage of social value, type,
+```
+>results$social_percentage
+```
+To print the fit statistics of the model:
+
+```
+>library(rfUtilities)
+>rf_model = results$rf_model
+>rf.regression.fit(rf_model)
+
+```
 
 ## DIAGNOSTICS (NOT ADDED YET BUT WILL BE COMING VERY SOON)
 
