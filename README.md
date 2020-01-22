@@ -87,19 +87,19 @@ The results for the demo data are written to the output file SVResultsOnDemoData
 
 To print the statistics of the different columns (social value, asocial value, etc.), type,
 ```
->results$stat
+> results$stat
 ```
 
 To get the percentage of social value, type,
 ```
->results$social_percentage
+> results$social_percentage
 ```
 To print the fit statistics of the model:
 
 ```
->library(rfUtilities)
->rf_model = results$rf_model
->rf.regression.fit(rf_model)
+> library(rfUtilities)
+> rf_model = results$rf_model
+> rf.regression.fit(rf_model)
 
 ```
 
