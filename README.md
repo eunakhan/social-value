@@ -80,15 +80,6 @@ Example for demodata -
 		EmptyNeighborhoodFeatureValues = c(0,0,0,31), ResultsFileName="SVResultsOnDemoData.csv" )
 ```
 
-To print out the statistics of the output columns (Social Value, Asocial Value, etc.), write:
-```
-results$stat
-```
-To print the error measures of the Social Value, write:
-```
-results$sv_error
-```
-
 In the demo data we have four social features:
   1. neighborhood_age_in_weeks: Average membership age of neighbors  
   2. neighborhood_num_sessions: Average number of sessions of neighbors
@@ -106,8 +97,13 @@ To get the percentage of social value, type,
 ```
 > results$social_percentage
 ```
-To print the fit statistics of the model:
 
+To print the error measures of the Social Value, write:
+```
+results$sv_error
+```
+
+To print the fit statistics of the model:
 ```
 > library(rfUtilities)
 > rf_model = results$rf_model
