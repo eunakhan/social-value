@@ -66,6 +66,9 @@ Arguments -
 - **SocialFeatures:** A vector of indexes of all the social featues in ValueFeaturesFile.
 - **EmptyNeighborhoodFeatureValues:** A vector of values that SocialFeatures will take for a user with no neighbors.
 - **ResultsFileName:** The comma-separated-value file into which all the results will be written. (If no value is provided then defaults to SVResults.csv)
+- **GroundTruthFile:** The file which has the ground truth estimates of the social value scores for all / some of the nodes.
+- **gt_idColumn:** The index of user id column in the GroundTruthFile (If no value provided then defaults to the first column in GroundTruthFile)
+- **gt_svColumn:** The index of ground truth social value score column in GroundTruthFile. (If no value provided then defaults to the second column in GroundTruthFile)
 
 
 Example for demodata -
@@ -75,6 +78,15 @@ Example for demodata -
 > results <-
        computesv( ValueFeaturesFile="demodatafeatures.csv", NetworkFile="demodatanetwork.csv", idColumn = 1, ValueColumn = 4, socialFeatures = c(6,7,8,9),
 		EmptyNeighborhoodFeatureValues = c(0,0,0,31), ResultsFileName="SVResultsOnDemoData.csv" )
+```
+
+To print out the statistics of the output columns (Social Value, Asocial Value, etc.), write:
+```
+results$stat
+```
+To print the error measures of the Social Value, write:
+```
+results$sv_error
 ```
 
 In the demo data we have four social features:
