@@ -98,12 +98,12 @@ To get the percentage of social value, type,
 > results$social_percentage
 ```
 
-To print the error measures of the Social Value, write:
+To print the rsquared value for the linear relationship between the observed and predicted Social Value, write:
 ```
-results$sv_error
+results$rsquared
 ```
 
-To print the fit statistics of the model:
+To print the fit statistics of the random forest model:
 ```
 > library(rfUtilities)
 > rf_model = results$rf_model
