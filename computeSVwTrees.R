@@ -73,26 +73,32 @@ computesv <- function(ValueFeaturesFile, NetworkFile,
   
   # Aggregate edge wise network power for computing social value as well as network power of source nodes
   ewsvresult$ewsv <- ewsvresult$normalizedew*ewsvresult$NetworkPower
+  
+  #FOR VALIDATION: write ewsvresult$sourceNodeID,ewsvresult$destinationNodeID, ewsvresult$ewsv to a file
+  tempdf <- data.frame(source=ewsvresult$sourceNodeID, dest=ewsvresult$destinationNodeID, sv= ewsvresult$ewsv)
+  write.csv(tempdf, "directed_sv.csv", quote=FALSE, row.names=FALSE)
+  ####
+  
   svresult <- aggregate(ewsv ~ sourceNodeID, ewsvresult, sum)
   names(svresult)[1] <- paste("userID")
   names(svresult)[2] <- paste("SocialValue")
   npresult <- aggregate(ewsv ~ destinationNodeID, ewsvresult, sum)
   names(npresult)[1] <- paste("userID")
-  names(npresult)[2] <- paste("NetworkPower")
+  names(npresult)[2] <- paste("Influenceability") #***influenceability hobe, not Network power
   psresult <- data.frame(svdata$userID,svdata[,targetVariable])
   names(psresult)[1] <- paste("userID")
   names(psresult)[2] <- paste("PersonalSpend")
   
-  # Put together network power, social value, personal spend in one record
+  # Put together influenceability, social value, personal spend in one record
   join1 <- merge(psresult, svresult, by="userID", all=TRUE)
   join1[is.na(join1)] <- 0
   resultstable <- merge(join1,npresult, by="userID", all=TRUE)
   resultstable[is.na(resultstable)] <- 0
-  resultstable$AsocialValue <- resultstable$PersonalSpend - resultstable$NetworkPower
+  resultstable$AsocialValue <- resultstable$PersonalSpend - resultstable$Influenceability
   
   
   
-  resultstable$Influenceability <- resultstable$PersonalSpend - resultstable$AsocialValue 
+  resultstable$NetworkPower <- resultstable$AsocialValue + resultstable$SocialValue 
   resultstable$TotalValue <- resultstable$SocialValue + resultstable$AsocialValue + resultstable$Influenceability
   
   #generate stats for each column
@@ -111,8 +117,6 @@ computesv <- function(ValueFeaturesFile, NetworkFile,
   stat_df = data.frame(metric_stat, minimum, maximum, std, mean, total)
   
   social_percentage = sum(resultstable$SocialValue) / (sum(resultstable$SocialValue) + sum(resultstable$AsocialValue))
-  
-  
   
   cat(" done, writing results to file\n")
   
