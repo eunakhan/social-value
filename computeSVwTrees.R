@@ -95,7 +95,7 @@ computesv <- function(ValueFeaturesFile, NetworkFile,
   estimatedNoSocialY <- predict(rf_model,nonNeighborData[,-c(idColumn,targetVariable)])
   
   # Estimate network power as difference in actual and no social simulated target variable values
-  cat("Computing sv ...")
+  cat("\nComputing sv ...")
   networkPowerFull <- data.frame(svdata[,idColumn], pmax(0,(svdata[,targetVariable] - estimatedNoSocialY)) )
   
   # Join with edgeweight sums to get normalization factor which can be used to compute 
