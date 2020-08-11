@@ -35,6 +35,51 @@ computesv <- function(ValueFeaturesFile, NetworkFile,
   y_pred_rf = predict(rf_model , svdatax)
   cat(" done\n")
   
+  #calculate accuracy for the random forest model using binning based on log10(playtime)
+  y_actual = svdatay
+  
+  mod_y_actual = rapply(list(y_actual),function(x) ifelse(x==0, 0.01,x), how = "replace") #replace 0s by 0.01
+  mod_y_actual = unlist(mod_y_actual)
+  logged_y_actual = log10(mod_y_actual) #take log
+  
+  par(mar=c(1,1,1,1))
+  h<-hist(logged_y_actual) #do binning 
+  breaks = h$breaks
+  bin_no = rep(-1, length(logged_y_actual))
+  
+  for (j in 1:length(logged_y_actual)){
+    num = logged_y_actual[j]
+    flag=FALSE
+    
+    for (i in 1:(length(breaks)-1)){ # check which bin it falls into
+      left = breaks[i]
+      right = breaks[i+1]
+      if( (left<=num) & (num<right)){ # matches
+        bin_no[j] = 10**(i-1) # this is weight, bin no is i.
+        flag=TRUE
+        break 
+      }
+    }
+    
+    if (flag==FALSE & num==breaks[length(breaks)]) 
+      bin_no[j] = 10**(length(breaks)-1)
+
+  }
+  
+  smoothing_factor = 0.01
+  relative_error = rep(0, length(y_actual))
+  
+  for (i in 1:length(y_actual)){
+    abs_error = abs(y_actual[i]-y_pred_rf[i])
+    rel_err = abs_error / (y_actual[i]+smoothing_factor)
+    relative_error[i] = rel_err * bin_no[i]
+  }
+  
+  weighted_err = sum(relative_error)/sum(bin_no) 
+  accuracy_perc = 100-weighted_err*100
+  cat("accuracy %: ", accuracy_perc)
+  
+  
   # Prepare data with no neighbors being simulated 
   nonNeighborData <- svdata
   numSocialFeatures <- length(socialFeatures)
@@ -120,9 +165,9 @@ computesv <- function(ValueFeaturesFile, NetworkFile,
   
   cat(" done, writing results to file\n")
   
-  # Results of SV computation are now availablein results table
+  # Results of SV computation are now available in results table
   write.csv(resultstable,file=resultsFilename,quote=FALSE,row.names=FALSE)
   
-  return(list(rfmodel=rf_model,results=resultstable, rfcvmodelquality = cvmodelvals, predictions = y_pred_rf, stat=stat_df, social_percentage=social_percentage*100))
+  return(list(rfmodel=rf_model,results=resultstable, rfcvmodelquality = cvmodelvals, predictions = y_pred_rf, stat=stat_df, social_percentage=social_percentage*100, accuracy_percentage=accuracy_perc))
   
 }
