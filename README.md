@@ -100,7 +100,7 @@ To get the percentage of social value, type,
 
 To print the accuracy (binned) of the random forest model, write:
 ```
-results$accuracy_percentage
+> results$accuracy_percentage
 ```
 
 To print the fit statistics of the random forest model:
