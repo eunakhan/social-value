@@ -98,9 +98,9 @@ To get the percentage of social value, type,
 > results$social_percentage
 ```
 
-To print the rsquared value for the linear relationship between the observed and predicted Social Value, write:
+To print the accuracy (binned) of the random forest model, write:
 ```
-results$rsquared
+results$accuracy_percentage
 ```
 
 To print the fit statistics of the random forest model:
