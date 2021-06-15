@@ -14,24 +14,21 @@ import matplotlib.pyplot as plt
 import sklearn
 
 
-
-
-
-def computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures,
+def computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures, 
                       EmptyNeighborhoodFeatureValues, idColumn = 0, ValueColumn = None,
               ResultsFileName="SVResults.csv" ):
-    # Read CSV
+    # Read CSV 
     svdata = pd.read_csv(ValueFeaturesFile)
     ndata = pd.read_csv(NetworkFile)
-
+    
     # Data prep
     # Remove records with missing values
     svdata = svdata.dropna()
     ndata = ndata.dropna()
-
-
+    
+    
     if ValueColumn== None :
-        targetVariable  = len(svdata.columns)-1 #default to last column
+        targetVariable  = len(svdata.columns)-1 #default to last column 
     else:
         targetVariable = ValueColumn
 
@@ -43,11 +40,11 @@ def computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures,
 
     svdatax = svdata.iloc[:, c]
     svdatay = svdata.iloc[:, targetVariable]
-
-
+    
+    
     # Build random forest model over whole dataset
     #--------------------without tuning
-    nTree = 100
+    nTree = 100  
     sampFrac = 0.25
     numsamples = math.ceil(sampFrac*len(svdatax.index))
 
@@ -59,12 +56,12 @@ def computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures,
     y_pred_rf = rf.predict(svdatax)
 
     print("done.")
-
+    
     r2_score = sklearn.metrics.r2_score(svdatay, y_pred_rf)
-
+    
     #calculate accuracy for the random forest model using binning based on log10(playtime)
-
-
+    
+    
     y_actual = svdatay.copy()
     y_actual = y_actual.replace(to_replace = 0, value=0.01)  #replace 0s by 0.01
     logged_y_actual= np.log10(y_actual) #take log
@@ -72,10 +69,10 @@ def computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures,
     h=np.histogram(logged_y_actual) #do binning #plt.hist same
     breaks = h[1]
     bin_no = [-1]*len(logged_y_actual)
-
+    
     for j in range(0,len(logged_y_actual)):
         num = logged_y_actual[j]
-        flag = False
+        flag = False 
 
         for i in range(0, len(breaks)-1): # check which bin it falls into
             left = breaks[i]
@@ -83,16 +80,16 @@ def computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures,
             if (left<=num) & (num<right): # matches
                 bin_no[j] = 10**i # this is weight, bin no is i.
                 flag=True
-                break
+                break 
 
 
 
-        if flag==False and num==breaks[len(breaks)-1]:
+        if flag==False and num==breaks[len(breaks)-1]: 
             bin_no[j] = 10**(len(breaks)-1)
 
-
+      
     smoothing_factor = 0.01
-    relative_error = [0]*len(y_actual)
+    relative_error = [0]*len(y_actual) 
 
     for i in range(0,len(y_actual)):
         abs_error = abs(y_actual[i]-y_pred_rf[i])
@@ -101,36 +98,36 @@ def computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures,
 
 
 
-    weighted_err = sum(relative_error)/sum(bin_no)
+    weighted_err = sum(relative_error)/sum(bin_no) 
     accuracy_perc = 100-weighted_err*100
 
 
-    # Prepare data with no neighbors being simulated
+    # Prepare data with no neighbors being simulated 
     nonNeighborData = svdata
     numSocialFeatures = len(socialFeatures)
     defaultSocialDataBlock = None
-    numRecords = len(svdata.index)
+    numRecords = len(svdata.index) 
 
 
     for j in range(0,numSocialFeatures) :
         feature = socialFeatures[j]
         nonNeighborData.iloc[:, feature] = EmptyNeighborhoodFeatureValues[j]
-
-
+    
+    
     # Estimate target variable when simulating no neighbors
     estimatedNoSocialY = rf.predict(nonNeighborData.iloc[:, c])
-
+    
     # Estimate network power as difference in actual and no social simulated target variable values
     print("\nComputing sv ...")
     temp = svdata.iloc[:,targetVariable] - estimatedNoSocialY
 
     data = [ svdata.iloc[:,idColumn], temp.mask(temp<0, 0)]
     networkPowerFull = pd.concat(data, axis=1)
-
+    
     networkPowerFull.columns = ['dest', 'NetworkPower_dest']
 
 
-    # Join with edgeweight sums to get normalization factor which can be used to compute
+    # Join with edgeweight sums to get normalization factor which can be used to compute 
     # social value contribution for source node
 
     # Compute edge weight sums for each destination node. Using data frame ndata having
@@ -144,7 +141,10 @@ def computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures,
 
     grp_sum.reset_index(inplace=True)
 
-    grp_sum = grp_sum.drop(['src'], axis=1) #deleting column sourceid
+    try:
+        grp_sum = grp_sum.drop(['src'], axis=1) #deleting column sourceid
+    except: 
+        pass
 
 
     nndata = ndata.merge(grp_sum, how='left', on='dest', suffixes = ['_pair','_sumForDest'])
@@ -152,8 +152,8 @@ def computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures,
     nndata['normalized_ew'] = nndata['weight_pair'] / nndata['weight_sumForDest']
 
     nndata=nndata.fillna(0)
-
-
+    
+    
     ewsvresult = nndata.merge(networkPowerFull, how='left', on='dest')
     ewsvresult.head()
     ewsvresult['ewsv'] = ewsvresult['normalized_ew']*ewsvresult['NetworkPower_dest']
@@ -164,9 +164,9 @@ def computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures,
     tempdf['source'] = ewsvresult['src']
     tempdf['dest'] = ewsvresult['dest']
     tempdf['sv'] = ewsvresult["ewsv"]
-    tempdf.to_csv("directed_sv.csv", header=True, index=None)
-
-
+    tempdf.to_csv(ResultsFileName[:-4] + "_directed_sv.csv", header=True, index=None)
+    
+    
     #compute SV
     grouped = ewsvresult.groupby('src') #groupby src
     grp_sum = grouped.aggregate(np.sum)
@@ -175,8 +175,8 @@ def computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures,
     svresult = pd.DataFrame()
     svresult["userID"]=grp_sum['src']
     svresult["SocialValue"] = grp_sum['ewsv']
-
-
+    
+    
     #compute Influencability
     grouped = ewsvresult.groupby('dest') #groupby dest
     grp_sum = grouped.aggregate(np.sum)
@@ -185,14 +185,14 @@ def computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures,
     infresult = pd.DataFrame()
     infresult["userID"]=grp_sum['dest']
     infresult["Influenceability"] = grp_sum['ewsv']
-
+    
     psresult= pd.DataFrame()
     psresult["userID"]=svdata.iloc[:,idColumn]
     psresult["PersonalSpend"] = svdata.iloc[:,targetVariable]
-
+    
     merge1 = svresult.merge(psresult, on="userID", how="outer")
     merge1 = merge1.fillna(0)
-
+    
 
     resultstable = merge1.merge(infresult, on="userID", how="outer")
     resultstable = resultstable.fillna(0)
@@ -217,12 +217,15 @@ def computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures,
 
     data = {'Metric':metric_stat, 'Min':minimum, 'Max':maximum, 'Std': std, 'Mean': mean, 'Total':total}
     stat_df = pd.DataFrame(data)
-
+    
 
     social_percentage = sum(resultstable['SocialValue']) / (sum(resultstable['SocialValue']) + sum(resultstable['AsocialValue']))
-
+  
     print("done, writing results to file\n")
-
+    
     resultstable.to_csv(ResultsFileName, header=True, index=None)
 
     return (rf, resultstable, y_pred_rf, stat_df, social_percentage*100, r2_score, accuracy_perc)
+    
+
+
