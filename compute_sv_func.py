@@ -225,7 +225,7 @@ def computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures,
     
     resultstable.to_csv(ResultsFileName, header=True, index=None)
 
-    return (rf, resultstable, y_pred_rf, stat_df, social_percentage*100, r2_score, accuracy_perc)
+    return (stat_df, social_percentage*100, r2_score, accuracy_perc)
     
 
 
