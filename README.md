@@ -54,7 +54,7 @@ computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures,
 **Output:**
 The code computes,
 - Social Value, Asocial Value, Influenceability, Network Power, Personal Spend, Total Value for each user in the system. These are written in the ```ResultsFileName``` file.
-- Edgewise Social Value (Social Value of a person on another) which is written in the file named ```SVResults_directed_sv.csv```.
+- Edgewise Social Value (Social Value of each person on another) which is written in the file named ```SVResults_directed_sv.csv```.
 
 The code also returns a tuple which consists of the following items in order:
 - A dataframe listing the minimum, maximum, standard deviation, mean and total for each of the above mentioned metrics.
@@ -75,7 +75,7 @@ The following commands can then be run in the python interpreter to execute the 
 > res = computeSV("demodatafeatures.csv", "demodatanetwork.csv", [5,6,7,8], [0,0,0,31], 0, 3, "SVResultsOnDemoData.csv")
 ```
 
-The first command loads up the function, for computing Social Value, in Python's environment and makes it available to use.
+The first command loads up the function for computing Social Value in Python's environment and makes it available to use.
 The second command invokes the Social Value computation function. 
 
 In the demo data we have four social features:
