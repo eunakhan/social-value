@@ -1,9 +1,9 @@
-# svcode
-Computation of social value on WG dataset (3-22-18 v1.1)
+# Instructions for Academic and Commercial Licensed Uses
+Computation of Social Value on Wargaming demo dataset.
 
 ## INTRODUCTION
 
-The accompanying software can be used to mine "Social worth" of users in a system. Consider a system consisting of several users interacting with each other. These users are participants in the system and their participation creates "worth". This value for each user can be measured and/or estimated. The objective is to quantify the effect of social factors on this value from the users.
+The accompanying software can be used to mine "Social Value" of users in a system. Consider a system consisting of several users interacting with each other. These users are participants in the system and their participation creates "value". This value for each user can be measured and/or estimated. The objective is to quantify the effect of social factors on this value from the users.
 
 
 ## A BRIEF DESCRIPTION OF THE APPROACH
