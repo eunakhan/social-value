@@ -1,7 +1,7 @@
 # Instructions for both Academic and Commercial Licensed Uses
 <LICENSING INSTRUCTIONS FIRST>
           
-This ReadMe file explains the computation of Social Value on the accompanying demo dataset using the supplied code. Please see the accompanying paper published in the Journal of Advertising for a thorough explanation of the phenomenon and the metrics generated here.
+This ReadMe file explains the computation of Social Value on the accompanying demo dataset using the supplied code. Please see the accompanying paper published in the Journal of Advertising <ADD HYPERLINK WHEN AVAILABLE> for a thorough explanation of the phenomenon and the metrics generated here. Please cite that paper when publishing related research or content. <CITATION INFO, DOI, ETC.>
 
 ## INTRODUCTION
 
