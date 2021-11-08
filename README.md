@@ -3,82 +3,80 @@ Computation of Social Value on Wargaming demo dataset.
 
 ## INTRODUCTION
 
-The accompanying software can be used to mine "Social Value" of users in a system. Consider a system consisting of several users interacting with each other. These users are participants in the system and their participation creates "value". This value for each user can be measured and/or estimated. The objective is to quantify the effect of social factors on this value from the users.
+The accompanying software can be used to mine "Social Value" (which is defined in the paper "Social Value: A Computational Model for Measuring Influence on Purchases and Actions for Individuals and Systems") of users in a system. In short, Social Value is the collective behavioral impact a person has on others in their network. In other words, the amount (of money or time) that a person causes others in a system to spend is called their Social Value. The software contains a python code named ```compute_sv_func.py``` which contains the function ```compute_sv()``` to compute the Social Value along with some other related metrics for each users in a given system.
 
 
 ## A BRIEF DESCRIPTION OF THE APPROACH
+
 
 Note: A demo dataset is also included along with the software. The demo dataset can be used as an walkthrough example in order to better understand how to use the accompanying code.
 
 The approach used in the accompanying code achieves the objective via the following process -
 
 1) Learn a model which predicts the value of users as a response of various covariates describing these users' participation as well as social behavior in the system.
-Input: This step requires as input a comma separated value file with covariates and response for each user on one row.
-(See example file: demodatafeatures.csv, # of users: 73,433,  8 covariates + 1 response for each user.
-In the example file, the 4th column, session_length is used as the response for demo purposes)
+- This step requires as input a comma separated value file with covariates (features) and response for each user on one row.
+- See example file, ```demodatafeatures.csv``` (number of users: 73,433,  8 covariates + 1 response for each user) where the 4th column, ```session_length``` is used as the response for demo purposes.
+- Right now the code only supports continuous responses.
 
 2) Use the model to estimate, for each user, the expected contribution of the social behavior based covariates on the response.
 
-3) Use social network information as well as the values obtained in step #2 to compute social worth (as well as other related measures and metrics) for each user.
-Input: This step requires as input a comma separated file with each edge on one row. The network is assumed to be directed with non-negative edge weights.
-Each row in the file represents one edge and has the form -
-edgeSourceID, edgeDestinationID, edgeWeight
-(See example file: demodatanetwork.csv, number of edges among users in demodatafeatures.csv: 2,277,685) -
+3) Use social network information as well as the values obtained in step #2 to compute Social Value (as well as other related measures and metrics) for each user.
+- This step requires as input a comma separated file with each edge on one row. The network is assumed to be directed with non-negative edge weights.
+- Each row in the file represents one edge and has the form -
+```edgeSourceID, edgeDestinationID, edgeWeight```
+- See example file: ```demodatanetwork.csv```, number of edges among users in ```demodatafeatures.csv```: 2,277,685
 
 4) Write results to a comma-separated-value file which can be viewed in Microsoft excel or any other spreadsheet data processing tool.
 
-5) Along with the sv results, the code also returns various information about how well the model predicts the response value. The general idea is, the better the model predicts the response value,
-the better the confidence in the sv results.
-Note: Quantifying the effect of the quality of the model on the sv value estimation confidence is one of the main focus area and a work in progress.
+5) Along with the Social Value results, the code also returns various information about how well the model predicts the response value. The general idea is, the better the model predicts the response value, the better the confidence in the Social Value results.
 
-Technically the method can work on a continuous or binary response but right now the code only supports continuous responses. Support for multiple class/categorical responses will be added in the near future.
 Datasets having (1) covariates measuring asocial as well as social factors along with a suitable value based response for a population of users, as well as (2) network information for these users
 are ideal candidate datasets for this software.
+
+## Input and Output
+The prototype of the function is,
+
+```
+computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures, 
+          EmptyNeighborhoodFeatureValues, idColumn = 0, ValueColumn = None,
+          ResultsFileName="SVResults.csv" )
+```
+**Input parameters:**
+
+- **ValueFeaturesFile:** Location/filename for comma-separated-value file with covariates (features) and response for each user on one row. This file may contain header.
+- **NetworkFile:** Location/filename for comma-separated-file with each edge (with their weights) of the social network on one row, i.e., ```sourceID, destinationID, edgeWeight```. This file may contain header.
+- **SocialFeatures:** A vector of indices of all the social featues in ```ValueFeaturesFile```.
+- **EmptyNeighborhoodFeatureValues:** A vector of values that SocialFeatures will take for a user with no neighbors.
+- **idColumn:** The index of the user identifier (UserId) column in ```ValueFeaturesFile``` (If no value provided then defaults to the first column in ValueFeaturesFile).
+- **ValueColumn:** The index of the user value response column in ```ValueFeaturesFile``` (If no value provided then defaults to the last column in ```ValueFeaturesFile```).
+- **ResultsFileName:** Name of the comma-separated-value file into which all the results will be written. (If no value is provided then defaults to ```SVResults.csv```)
+
+**Output:**
+The code computes,
+- Social Value, Asocial Value, Influenceability, Network Power, Personal Spend, Total Value for each user in the system. These are written in the ```ResultsFileName``` file.
+- Edgewise Social Value (Social Value of a person on another) which is written in the file named ```SVResults_directed_sv.csv```.
+
+The code also returns a tuple which consists of the following items in order:
+- A dataframe listing the minimum, maximum, standard deviation, mean and total for each of the above mentioned metrics.
+- How much social the system is (in percentage).
+- The R-squared value for the model (learned in step 1 mentioned above) prediction.
+- The accuracy percentage of the model (learned in step 1 mentioned above).
 
 
 ## HOW TO USE THE CODE
 
-The code is written in R and can be run using RStudio. If not available, R and the free version of RStudio can be downloaded and installed from [R-project](https://www.r-project.org/) and [RStudio](https://www.rstudio.com/products/rstudio/download/#download) respectively.
+The code is written in python3 and can be run using any python interpreter given that the packages (pandas, numpy, sklearn) are installed properly.
 
-Set your working directory in RStudio to be the location on your laptop/PC where you plan on running the analysis. Copy all the accompanying code (as well as the demodata if using it)
-into the working directory. The following commands can now be run in RStudio to execute the code and compute social worth as well as other related measures -
-
-```
-> source("computeSVwTrees.R")
-> resultset <-
-       computesv( ValueFeaturesFile, NetworkFile, idColumn = 1, ValueColumn = NULL, socialFeatures, EmptyNeighborhoodFeatureValues, ResultsFileName = "SVResults.csv" )
-```
-
-The first command loads up the function, for computing social worth, in RStudio's environment and makes it available to use.
-The second command invokes the social worth computation function. This function returns a dataframe, stored in variable resultset,
-which lists the asocial value, social value, personal spend as well as influenceability of each user. These values are also written to an output file
-which can be opened in Microsoft excel or any other spreadsheet viewer.
-
-The method requires various information as input and also writes the results to a file. All of this can be controlled via the arguments passed to the method.
-
-
-Arguments -
-
-- **ValueFeaturesFile:** Location/filename for comma separated value file with covariates and response for each user on one row.
-- **NetworkFile:** Location/filename for comma separated file with each edge of the social network on one row.
-- **idColumn:** The index of the user identifier/ UserId column in ValueFeaturesFile (If no value provided then defaults to the first column in ValueFeaturesFile).
-- **ValueColumn:** The index of the user value response column in ValueFeaturesFile (If no value provided then defaults to the last column in ValueFeaturesFile).
-- **SocialFeatures:** A vector of indexes of all the social featues in ValueFeaturesFile.
-- **EmptyNeighborhoodFeatureValues:** A vector of values that SocialFeatures will take for a user with no neighbors.
-- **ResultsFileName:** The comma-separated-value file into which all the results will be written. (If no value is provided then defaults to SVResults.csv)
-- **GroundTruthFile:** The file which has the ground truth estimates of the social value scores for all / some of the nodes.
-- **gt_idColumn:** The index of user id column in the GroundTruthFile (If no value provided then defaults to the first column in GroundTruthFile)
-- **gt_svColumn:** The index of ground truth social value score column in GroundTruthFile. (If no value provided then defaults to the second column in GroundTruthFile)
-
-
-Example for demodata -
+Put all the code and data in the working directory. 
+The following commands can then be run in the python interpreter to execute the code for the demodata and compute Social Value as well as other related measures -
 
 ```
-> source("computeSVwTrees.R")
-> results <-
-       computesv( ValueFeaturesFile="demodatafeatures.csv", NetworkFile="demodatanetwork.csv", idColumn = 1, ValueColumn = 4, socialFeatures = c(6,7,8,9),
-		EmptyNeighborhoodFeatureValues = c(0,0,0,31), ResultsFileName="SVResultsOnDemoData.csv" )
+> import compute_sv_func
+> res = computeSV("demodatafeatures.csv", "demodatanetwork.csv", [5,6,7,8], [0,0,0,31], 0, 3, "SVResultsOnDemoData.csv")
 ```
+
+The first command loads up the function, for computing Social Value, in Python's environment and makes it available to use.
+The second command invokes the Social Value computation function. 
 
 In the demo data we have four social features:
   1. neighborhood_age_in_weeks: Average membership age of neighbors  
@@ -90,28 +88,20 @@ The results for the demo data are written to the output file SVResultsOnDemoData
 
 To print the statistics of the different columns (social value, asocial value, etc.), type,
 ```
-> results$stat
+> res[0]
 ```
 
 To get the percentage of social value, type,
 ```
-> results$social_percentage
+> res[1]
 ```
 
-To print the accuracy (binned) of the random forest model, write:
+To print the R-squared value of the model, write:
 ```
-> results$accuracy_percentage
-```
-
-To print the fit statistics of the random forest model:
-```
-> library(rfUtilities)
-> rf_model = results$rf_model
-> rf.regression.fit(rf_model)
-
+> res[2]
 ```
 
-## DIAGNOSTICS (NOT ADDED YET BUT WILL BE COMING VERY SOON)
-
-The root-mean-squared-error, R-sqaured measure, mean absolute deviance and the mean absolute percentage error are returned as measures of goodness of fit of the model predicting value for users.
-Generally, the lower the error, the better the features are able to explain the user values and consequently the more confident the social worth value estimation.
+To print the accuracy of the model, write:
+```
+> res[3]
+```
