@@ -1,15 +1,17 @@
-# Instructions for Academic and Commercial Licensed Uses
-Computation of Social Value on Wargaming demo dataset.
+# Instructions for both Academic and Commercial Licensed Uses
+<LICENSING INSTRUCTIONS FIRST>
+          
+This ReadMe file explains the computation of Social Value on the accompanying demo dataset using the supplied code. Please see the accompanying paper published in the Journal of Advertising for a thorough explanation of the phenomenon and the metrics generated here.
 
 ## INTRODUCTION
 
-The accompanying software can be used to mine "Social Value" (which is defined in the paper "Social Value: A Computational Model for Measuring Influence on Purchases and Actions for Individuals and Systems") of users in a system. In short, Social Value is the collective behavioral impact a person has on others in their network. In other words, the amount (of money or time) that a person causes others in a system to spend is called their Social Value. The software contains a python code named ```compute_sv_func.py``` which contains the function ```compute_sv()``` to compute the Social Value along with some other related metrics for each users in a given system.
+The accompanying software can be used to mine "Social Value" (which is defined in the paper "Social Value: A Computational Model for Measuring Influence on Purchases and Actions for Individuals and Systems") of users in a system. In short, Social Value is the collective behavioral impact a person has on others in their network. In other words, the amount (of money or time or anything else that is objectively quantifiable) that a person causes others in a system to spend is called their Social Value. The software contains a python code named ```compute_sv_func.py``` which contains the function ```compute_sv()``` to compute the Social Value along with some other related metrics for each users in a given system. There are a series of other metrics for being influenced and for actions not related to others' behavior. Please see the Journal paper for details and context.
 
 
 ## A BRIEF DESCRIPTION OF THE APPROACH
 
 
-Note: A demo dataset is also included along with the software. The demo dataset can be used as an walkthrough example in order to better understand how to use the accompanying code.
+Note: A demo dataset is also included along with the software. The demo dataset can be used as an walkthrough example in order to better understand how to use the accompanying code. This dataset is real, and anonymized data, provided courtesy of Wargaming, Inc. It is from players of their game World of Tanks. We offer significant thanks to them for their support of research.
 
 The approach used in the accompanying code achieves the objective via the following process -
 
