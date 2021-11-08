@@ -45,8 +45,8 @@ computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures,
 
 - **ValueFeaturesFile:** Location/filename for comma-separated-value file with covariates (features) and response for each user on one row. This file may contain header.
 - **NetworkFile:** Location/filename for comma-separated-value file with each edge (with their weights) of the social network on one row, i.e., ```sourceID, destinationID, edgeWeight```. This file may contain header.
-- **SocialFeatures:** A vector of indices of all the social featues in ```ValueFeaturesFile```.
-- **EmptyNeighborhoodFeatureValues:** A vector of values that SocialFeatures will take for a user with no neighbors.
+- **SocialFeatures:** A list of indices of all the social featues in ```ValueFeaturesFile```.
+- **EmptyNeighborhoodFeatureValues:** A list of values that SocialFeatures will take for a user with no neighbors.
 - **idColumn:** The index of the user identifier (UserId) column in ```ValueFeaturesFile``` (If no value provided then defaults to the first column in ValueFeaturesFile).
 - **ValueColumn:** The index of the user value response column in ```ValueFeaturesFile``` (If no value provided then defaults to the last column in ```ValueFeaturesFile```).
 - **ResultsFileName:** Name of the comma-separated-value file into which all the results will be written. (If no value is provided then defaults to ```SVResults.csv```)
