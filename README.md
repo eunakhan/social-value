@@ -14,14 +14,14 @@ Note: A demo dataset is also included along with the software. The demo dataset 
 The approach used in the accompanying code achieves the objective via the following process -
 
 1) Learn a model which predicts the value of users as a response of various covariates describing these users' participation as well as social behavior in the system.
-- This step requires as input a comma separated value file with covariates (features) and response for each user on one row.
+- This step requires as input a comma-separated-value file with covariates (features) and response for each user on one row.
 - See example file, ```demodatafeatures.csv``` (number of users: 73,433,  8 covariates + 1 response for each user) where the 4th column, ```session_length``` is used as the response for demo purposes.
 - Right now the code only supports continuous responses.
 
 2) Use the model to estimate, for each user, the expected contribution of the social behavior based covariates on the response.
 
 3) Use social network information as well as the values obtained in step #2 to compute Social Value (as well as other related measures and metrics) for each user.
-- This step requires as input a comma separated file with each edge on one row. The network is assumed to be directed with non-negative edge weights.
+- This step requires as input a comma-separated-value file with each edge on one row. The network is assumed to be directed with non-negative edge weights.
 - Each row in the file represents one edge and has the form -
 ```edgeSourceID, edgeDestinationID, edgeWeight```
 - See example file: ```demodatanetwork.csv```, number of edges among users in ```demodatafeatures.csv```: 2,277,685
@@ -44,7 +44,7 @@ computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures,
 **Input parameters:**
 
 - **ValueFeaturesFile:** Location/filename for comma-separated-value file with covariates (features) and response for each user on one row. This file may contain header.
-- **NetworkFile:** Location/filename for comma-separated-file with each edge (with their weights) of the social network on one row, i.e., ```sourceID, destinationID, edgeWeight```. This file may contain header.
+- **NetworkFile:** Location/filename for comma-separated-value file with each edge (with their weights) of the social network on one row, i.e., ```sourceID, destinationID, edgeWeight```. This file may contain header.
 - **SocialFeatures:** A vector of indices of all the social featues in ```ValueFeaturesFile```.
 - **EmptyNeighborhoodFeatureValues:** A vector of values that SocialFeatures will take for a user with no neighbors.
 - **idColumn:** The index of the user identifier (UserId) column in ```ValueFeaturesFile``` (If no value provided then defaults to the first column in ValueFeaturesFile).
