@@ -1,4 +1,4 @@
-##READ THIS FIRST: LICENSING
+# READ THIS FIRST: LICENSING
 This software, and the algorithm within, are available for non-commercial, academic and research purposes only. To license the algorithm and code for commercial use, please contact The USC Stevens Center for Innovation at CONTACT INFO HERE.
 
 For non-commercial users:
