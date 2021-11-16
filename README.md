@@ -1,6 +1,35 @@
-# Instructions for both Academic and Commercial Licensed Uses
-<LICENSING INSTRUCTIONS FIRST>
-          
+##READ THIS FIRST: LICENSING
+This software, and the algorithm within, are available for non-commercial, academic and research purposes only. To license the algorithm and code for commercial use, please contact The USC Stevens Center for Innovation at CONTACT INFO HERE.
+
+For non-commercial users:
+This software is Copyright © 2021 The University of Southern California. All Rights Reserved.
+Permission to use, copy, modify, and distribute this software and its documentation for educational, research
+and non-profit purposes, without fee, and without a written agreement is hereby granted, provided that the
+above copyright notice, this paragraph and the following three paragraphs appear in all copies.
+Permission to make commercial use of this software may be obtained by contacting:
+USC Stevens Center for Innovation
+University of Southern California
+1150 S. Olive Street, Suite 2300
+Los Angeles, CA 90115, USA
+This software program and documentation are copyrighted by The University of Southern California. The
+software program and documentation are supplied "as is", without any accompanying services from USC. USC
+does not warrant that the operation of the program will be uninterrupted or error-free. The end-user
+understands that the program was developed for research purposes and is advised not to rely exclusively on the
+program for any reason.
+IN NO EVENT SHALL THE UNIVERSITY OF SOUTHERN CALIFORNIA BE LIABLE TO ANY PARTY FOR
+DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST
+PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF THE
+UNIVERSITY OF SOUTHERN CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+DAMAGE. THE UNIVERSITY OF SOUTHERN CALIFORNIA SPECIFICALLY DISCLAIMS ANY
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE PROVIDED 
+5
+HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF SOUTHERN CALIFORNIA HAS NO
+OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR
+MODIFICATIONS.
+
+
+# Instructions          
 This ReadMe file explains the computation of Social Value on the accompanying demo dataset using the supplied code. Please see the accompanying paper published in the Journal of Advertising <ADD HYPERLINK WHEN AVAILABLE> for a thorough explanation of the phenomenon and the metrics generated here. Please cite that paper when publishing related research or content. <CITATION INFO, DOI, ETC.>
 
 ## INTRODUCTION
