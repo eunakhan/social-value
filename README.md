@@ -13,7 +13,7 @@ To discuss the commercial use of this software, please contact USC Stevens at st
 
 
 # Instructions          
-This ReadMe file explains the computation of Social Value on the accompanying demo dataset using the supplied code. Please see the accompanying paper published in the Journal of Advertising <ADD HYPERLINK WHEN AVAILABLE> for a thorough explanation of the phenomenon and the metrics generated here. Please cite that paper when publishing related research or content. <CITATION INFO, DOI, ETC.>
+This ReadMe file explains the computation of Social Value on the accompanying demo dataset using the supplied code. Please see the accompanying paper published in the Journal of Advertising (https://doi.org/10.1080/00913367.2021.2002743) for a thorough explanation of the phenomenon and the metrics generated here. Please cite that paper when publishing related research or content.
 
 ## INTRODUCTION
 
