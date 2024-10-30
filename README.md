@@ -44,30 +44,30 @@ The approach used in the accompanying code achieves the objective via the follow
 
 5) Along with the Social Value results, the code also returns various information about how well the model predicts the response value. The general idea is, the better the model predicts the response value, the better the confidence in the Social Value results.
 
-Datasets having (1) covariates measuring asocial as well as social factors along with a suitable value based response for a population of users, as well as (2) network information for these users
+Datasets having (1) covariates measuring nonsocial as well as social factors along with a suitable value based response for a population of users, as well as (2) network information for these users
 are ideal candidate datasets for this software.
 
 ## Input and Output
 The prototype of the function is,
 
 ```
-computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures, 
+computeSV(ValueFeaturesFile, NetworkFile,  OneHopNetworkNeighborFeatures, 
           EmptyNeighborhoodFeatureValues, idColumn = 0, ValueColumn = None,
           ResultsFileName="SVResults.csv" )
 ```
 **Input parameters:**
 
-- **ValueFeaturesFile:** Location/filename for comma-separated-value file with covariates (features) and response for each user on one row. This file may contain header.
+- **ValueFeaturesFile:** Location/filename for comma-separated-value file with covariates (features) and response for each user on one row. This file may contain header. The features can include features related to the focal person (FocalPersonFeatures), and features related to the focal person's one hop neighbors (OneHopNetworkNeighborFeatures).
 - **NetworkFile:** Location/filename for comma-separated-value file with each edge (with their weights) of the social network on one row, i.e., ```sourceID, destinationID, edgeWeight```. This file may contain header.
-- **SocialFeatures:** A list of indices of all the social featues in ```ValueFeaturesFile```.
-- **EmptyNeighborhoodFeatureValues:** A list of values that SocialFeatures will take for a user with no neighbors.
+- **OneHopNetworkNeighborFeatures:** A list of indices of all the features related to the one hop neighbors of a person in ```ValueFeaturesFile```.
+- **EmptyNeighborhoodFeatureValues:** A list of values that OneHopNetworkNeighborFeatures will take for a user with no neighbors.
 - **idColumn:** The index of the user identifier (UserId) column in ```ValueFeaturesFile``` (If no value provided then defaults to the first column in ValueFeaturesFile).
 - **ValueColumn:** The index of the user value response column in ```ValueFeaturesFile``` (If no value provided then defaults to the last column in ```ValueFeaturesFile```).
 - **ResultsFileName:** Name of the comma-separated-value file into which all the results will be written. (If no value is provided then defaults to ```SVResults.csv```)
 
 **Output:**
 The code computes,
-- Social Value, Asocial Value, Influenceability, Network Power, Personal Spend, Total Value for each user in the system. These are written in the ```ResultsFileName``` file.
+- Social Value, Nonsocial Value, Receptivity, Network Power, Personal Total, Total Value for each user in the system. These are written in the ```ResultsFileName``` file.
 - Edgewise Social Value (Social Value of each person on another) which is written in the file named ```SVResults_directed_sv.csv```.
 
 The code also returns a tuple which consists of the following items in order:
@@ -92,15 +92,15 @@ The following commands can then be run in the python interpreter to execute the 
 The first command loads up the function for computing Social Value in Python's environment and makes it available to use.
 The second command invokes the Social Value computation function. 
 
-In the demo data we have four social features:
+In the demo data we have four OneHopNetworkNeighborFeatures:
   1. neighborhood_age_in_weeks: Average membership age of neighbors  
   2. neighborhood_num_sessions: Average number of sessions of neighbors
   3. neighborhood_session_length: Average session length of neighbors
-  4. neighborhood_days_inactive: Average number of days of inactivity of neighbors. In case of a user having no neighbors, values of 0,0,0 and 31 respectively are assigned to each of the social features.
+  4. neighborhood_days_inactive: Average number of days of inactivity of neighbors. In case of a user having no neighbors, values of 0,0,0, and 31 respectively are assigned to each of the OneHopNetworkNeighborFeatures.
 
 The results for the demo data are written to the output file SVResultsOnDemoData.csv, which can be viewed in Microsoft excel.
 
-To print the statistics of the different columns (social value, asocial value, etc.), type,
+To print the statistics of the different columns (social value, nonsocial value, etc.), type,
 ```
 > res[0]
 ```
@@ -119,3 +119,5 @@ To print the accuracy of the model, write:
 ```
 > res[3]
 ```
+
+In the paper and the previous version of the code, we used the terms **Personal Spend**, **socialFeatures**, **Asocial Value**, and **Influenceability** to refer to **Personal Total**, **OneHopNetworkNeighborFeatures**, **Nonsocial Value**, and **Receptivity**, respectively. Subsequently, we renamed these terms to better reflect the nature of the variables.
