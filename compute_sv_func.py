@@ -10,8 +10,12 @@ import math
 import numpy as np
 import sklearn
 
+#renaming socialFeatures to OneHopNetworkNeighborFeatures
+#renaming PersonalSpend to PersonalTotal
+#renaming AsocialValue to NonSocialValue
+#renaming Influenceability to Receptivity
 
-def computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures, 
+def computeSV(ValueFeaturesFile, NetworkFile,  OneHopNetworkNeighborFeatures, 
                       EmptyNeighborhoodFeatureValues, idColumn = 0, ValueColumn = None,
               ResultsFileName="SVResults.csv" ):
     # Read CSV 
@@ -101,13 +105,13 @@ def computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures,
 
     # Prepare data with no neighbors being simulated 
     nonNeighborData = svdata
-    numSocialFeatures = len(socialFeatures)
+    numOneHopNetworkNeighborFeatures = len(OneHopNetworkNeighborFeatures)
     defaultSocialDataBlock = None
     numRecords = len(svdata.index) 
 
 
-    for j in range(0,numSocialFeatures) :
-        feature = socialFeatures[j]
+    for j in range(0,numOneHopNetworkNeighborFeatures) :
+        feature = OneHopNetworkNeighborFeatures[j]
         nonNeighborData.iloc[:, feature] = EmptyNeighborhoodFeatureValues[j]
     
     
@@ -181,11 +185,11 @@ def computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures,
 
     infresult = pd.DataFrame()
     infresult["userID"]=grp_sum['dest']
-    infresult["Influenceability"] = grp_sum['ewsv']
+    infresult["Receptivity"] = grp_sum['ewsv']
     
     psresult= pd.DataFrame()
     psresult["userID"]=svdata.iloc[:,idColumn]
-    psresult["PersonalSpend"] = svdata.iloc[:,targetVariable]
+    psresult["PersonalTotal"] = svdata.iloc[:,targetVariable]
     
     merge1 = svresult.merge(psresult, on="userID", how="outer")
     merge1 = merge1.fillna(0)
@@ -194,29 +198,29 @@ def computeSV(ValueFeaturesFile, NetworkFile,  socialFeatures,
     resultstable = merge1.merge(infresult, on="userID", how="outer")
     resultstable = resultstable.fillna(0)
 
-    resultstable['AsocialValue'] = resultstable['PersonalSpend']-resultstable['Influenceability']
+    resultstable['NonSocialValue'] = resultstable['PersonalTotal']-resultstable['Receptivity']
 
-    resultstable['NetworkPower'] = resultstable['AsocialValue'] + resultstable['SocialValue']
-    resultstable['TotalValue'] = resultstable['SocialValue'] + resultstable['AsocialValue'] + resultstable['Influenceability']
+    resultstable['NetworkPower'] = resultstable['NonSocialValue'] + resultstable['SocialValue']
+    resultstable['TotalValue'] = resultstable['SocialValue'] + resultstable['NonSocialValue'] + resultstable['Receptivity']
 
     # generate stats for each column
-    metric_stat = ["Social Value", "Asocial Value", "Influenceability", "Network Power", "Personal Spend", "Total Value"]
+    metric_stat = ["Social Value", "Nonsocial Value", "Receptivity", "Network Power", "Personal Total", "Total Value"]
 
-    minimum = [min(resultstable['SocialValue']), min(resultstable['AsocialValue']), min(resultstable['Influenceability']), min(resultstable['NetworkPower']), min(resultstable['PersonalSpend']), min(resultstable['TotalValue'])]
+    minimum = [min(resultstable['SocialValue']), min(resultstable['NonSocialValue']), min(resultstable['Receptivity']), min(resultstable['NetworkPower']), min(resultstable['PersonalTotal']), min(resultstable['TotalValue'])]
 
-    maximum= [max(resultstable['SocialValue']), max(resultstable['AsocialValue']), max(resultstable['Influenceability']), max(resultstable['NetworkPower']), max(resultstable['PersonalSpend']), max(resultstable['TotalValue'])]
+    maximum= [max(resultstable['SocialValue']), max(resultstable['NonSocialValue']), max(resultstable['Receptivity']), max(resultstable['NetworkPower']), max(resultstable['PersonalTotal']), max(resultstable['TotalValue'])]
 
-    std = [np.std(resultstable['SocialValue']), np.std(resultstable['AsocialValue']), np.std(resultstable['Influenceability']), np.std(resultstable['NetworkPower']), np.std(resultstable['PersonalSpend']), np.std(resultstable['TotalValue'])]
+    std = [np.std(resultstable['SocialValue']), np.std(resultstable['NonSocialValue']), np.std(resultstable['Receptivity']), np.std(resultstable['NetworkPower']), np.std(resultstable['PersonalTotal']), np.std(resultstable['TotalValue'])]
 
-    mean= [np.mean(resultstable['SocialValue']), np.mean(resultstable['AsocialValue']), np.mean(resultstable['Influenceability']), np.mean(resultstable['NetworkPower']), np.mean(resultstable['PersonalSpend']), np.mean(resultstable['TotalValue'])]
+    mean= [np.mean(resultstable['SocialValue']), np.mean(resultstable['NonSocialValue']), np.mean(resultstable['Receptivity']), np.mean(resultstable['NetworkPower']), np.mean(resultstable['PersonalTotal']), np.mean(resultstable['TotalValue'])]
 
-    total = [sum(resultstable['SocialValue']), sum(resultstable['AsocialValue']), sum(resultstable['Influenceability']), sum(resultstable['NetworkPower']), sum(resultstable['PersonalSpend']), sum(resultstable['TotalValue'])]
+    total = [sum(resultstable['SocialValue']), sum(resultstable['NonSocialValue']), sum(resultstable['Receptivity']), sum(resultstable['NetworkPower']), sum(resultstable['PersonalTotal']), sum(resultstable['TotalValue'])]
 
     data = {'Metric':metric_stat, 'Min':minimum, 'Max':maximum, 'Std': std, 'Mean': mean, 'Total':total}
     stat_df = pd.DataFrame(data)
     
 
-    social_percentage = sum(resultstable['SocialValue']) / (sum(resultstable['SocialValue']) + sum(resultstable['AsocialValue']))
+    social_percentage = sum(resultstable['SocialValue']) / (sum(resultstable['SocialValue']) + sum(resultstable['NonSocialValue']))
   
     print("done, writing results to file\n")
     
