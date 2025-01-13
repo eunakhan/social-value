@@ -1,4 +1,4 @@
-If you are a non-commercial user, you can use SV for free once cleared. Contact Prof. Dmitri Williams at dcwillia@usc.edu. If you are a commercial enterprise, it’s available via license. Send an email to matthew@socvalue.com to learn more.
+If you are a non-commercial user, SV is free pursuant to limited terms. Contact Prof. Dmitri Williams at dcwillia@usc.edu. If you are a commercial enterprise, it’s available via license. An NDA and check are required for both routes. Send an email to matthew@socvalue.com to learn more.
 
 
 
